@@ -1,0 +1,21 @@
+
+-- CFG's 51 & 61
+
+do 
+  d1
+    $ limit
+    $ stack [
+      slow 3 $ pad1
+      -- detune
+      , pan 1 # perf1 (range 0 127 $ slow 14 tri)
+      -- bend
+      , fast 1.2 $ pan 1 # perf5 (range 0 127 $ slow 16 tri)
+      -- lfo speed
+      , fast 8 $ pan 1 # perf9 (range 10 127 $ slow 22 tri)
+      -- lfo mult
+      , fast 8 $ pan 1 # perf6 (range 0 0 $ slow 23 tri)
+      -- balance
+      , fast 8 $ pan 1 # perf2 (range 0 127 $ slow 39 tri)
+    ] # rytm # cps (150/120/2)
+
+    hush

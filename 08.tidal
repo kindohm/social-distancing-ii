@@ -1,0 +1,32 @@
+
+hush
+
+d1 
+  $ limit 
+  $ roll 0.6
+  $ dg3
+  $ (|+ note 3)
+  $ (|+ note "-24")
+  $ rytm # note (scale "minPent" "{0 3 -4}%16")
+
+d2 
+  $ g 
+  $ limit
+  $ one 0.2
+  $ roll 0.5
+  $ rollSlow 0.5
+  $ slow 2.5 
+  $ rytm 
+  # note "{c3 b2}%15" # midichan 1
+
+do 
+  let pat = "{0@5 0@5 1@10 0 0 0 1@6}%16"
+  d3 
+    $ limit 
+    $ dg3
+    $ every 2 rev
+    $ stack [
+      ghost ( # pad11) $ rytmmap [2,3] pat # note "c3" 
+    ] # rytm
+
+    hush

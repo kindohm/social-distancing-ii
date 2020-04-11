@@ -1,0 +1,43 @@
+let duds = slow 8 $ stack [
+        note "<-12 -24 -16>" # legato 1
+        , fast 1.2 $ filter1 # ccvrand 0 127 101
+        , fast 1.3 $ filter2 # ccvrand 0 127 102
+        , fast 1.4 $ phoff # ccvrand 0 127 103
+        , fast 1.6 $ phwidth # ccvrand 0 127 104
+        , fast 1.5 $ phspeed # ccvrand 0 127 105
+        , fast 1.7 $ prism # ccvrand 0 127 106
+        , fast 1.8 $ harmonizer # ccvrand 0 127 107
+        , fast 1.15 $ detune # ccvrand 0 127 1100
+        , fast 1.1 $ detune2 # ccvrand 0 10 108
+        , fast 1.25 $ timbre # ccvrand 0 127 109
+        , fast 1.35 $ penv # ccvrand 0 127 110
+        , fast 1.45 $ filter1width # ccvrand 0 127 111
+        , fast 1.55 $ filter2width # ccvrand 0 127 112
+      ] # dudChan # legato 1.5
+
+hush
+
+do 
+  let cpsPat =  "<1 6 6 4 5 2 2 2 4 3 2 [2 8]/2>"
+      chanPat = "<2 [2 2 6]/3 2 3 [6 2 6]/3 2 [3 2]/2 2 [2 3]/2 2>"
+      plies = "<4 6 8 10 12>"
+      plyFunc = (|* gain 0.95)
+      freq = 0.3
+      revFreq = 0.2
+  d1  
+    $ limit
+    $ ssb revFreq rev
+    $ stack [
+      ssb freq (plyWith plies plyFunc )
+        $ pan 1 # midichan chanPat # note "c3" # rytm
+      , ssb freq (const $ plyWith plies (plyFunc . (# pad11)) $ pad12) $ pad11 # rytm
+      , slow 5 $ pad8 # rytm
+      , perf3 "<0 0 0 127>"
+      , perf4 "<0 0 0 0 127>"
+      , slow 4 $ (0.125 ~>) $ (0.5 ~>) $ pad2
+      , randcat [randDelay, normDelay, randDelay]
+      , slow 4 $ scene "<0 1 2>"
+    ] # cps cpsPat
+  d2 $ limit $ duds
+
+  hush

@@ -1,0 +1,12 @@
+
+
+d1 
+  $ limit
+  $ stack [
+    pad1
+    , iter 8 $ pad2
+    , (0.5 ~>) $ pad4
+    , (0.25 ~>) $ superimpose (0.125 <~) $ struct "1*2" $ pad7
+  ] # rytm # cps (150/120/2)
+
+  hush

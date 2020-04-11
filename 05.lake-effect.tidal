@@ -1,0 +1,67 @@
+setcps (150/120/2)
+
+
+let fill = midinote "9*6 9*6 [8,3] [4,10]" # gain (fast 2 $ slowcat [(range 0.5 1 $ saw), 1])
+    nope = midinote "~"
+    hatpat = whenmod 12 9 (const $ midinote "[8*3 8*3 9 ~]") $ whenmod 10 6 (const $ midinote "[8*3 9]*2") $ midinote "[8*4 9]*2"
+    snarepat = midinote "~ 1"
+    kickpat = midinote "~ [~ 2*2] ~ ~"
+    tompat = midinote "{[5 ~ ~ 7] [[~ 5] ~] ~ [~ 11/3] ~}%4"
+    gtfo p = (const $ midinote "~") $ p
+
+
+    whenmod 14 10 (|+ note "12") 
+    $ whenmod 8 4 (|+ note "12") 
+
+hush
+
+p "bass"
+  $ stack [
+    whenmod 8 4 (|+ note 12)
+    $ (|+ note "-24")
+    $ (|+ note "-6") 
+    $ note "{0 7 -1/4 3 -12/3 11 -5/2}%2" 
+    # midichan 0
+    # legato (range 0.1 0.1 $ slow 20 tri)
+    , whenmod 14 10 (# ccv 127) $ pan 1 # perf1 0
+    -- release
+    , perf2 (range 0 127 $ slow 30 tri)
+  ] # rytm
+
+p "keys" 
+  $ stack [
+    whenmod 18 13 (iter 8) 
+      $ whenmod 14 9 (slow (2)) 
+      $ rarely (gtfo) 
+      $ shift 
+      $ (|+ note (shiftBy 8392 $ choose [0,-12,12])) 
+      $ (|+ note "6") 
+      $ (|+ note "-24")
+      $ struct "{1 1 1 1 ~ 1 1 ~ 1 ~}%16" 
+      $ note "{0 7 -1 3 -12 11 -5}%16"
+      # legato (range 0.2 0.4 $ slow 7.33 tri)
+      # midichan 6
+  ] # rytm
+
+
+
+
+
+
+-- kit 22
+p "rytm" 
+  $ limit
+  $ stack [
+    whenmod 16 10 (const $ midinote "~") $ kickpat,
+    whenmod 20 10 (const $ midinote "~") $ tompat,
+    whenmod 18 13 (const $ midinote "~") $ snarepat,
+    every 8 (const $ fill) $ whenmod 16 8 (const $ midinote "~") $ hatpat 
+  ] # rytm
+
+p "rytm" silence
+
+p "rytm" $ limit $ every 8 (const $ fill # rytm) $ midinote "~" # rytm
+
+hush
+
+

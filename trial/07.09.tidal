@@ -1,0 +1,21 @@
+
+-- bass:
+-- lfo depth adjusts square detune
+-- also adjust filter cutoff
+
+p "nine"
+  $ limit
+  $ stack [
+    -- bass
+    g $ pad1
+    -- shuff
+    , g $ iter 8 $ pad2
+    -- long sand
+    , g $ iter 8 $ rollSlow 0.5 $ (0.5 ~>) $ pad4
+    -- knock
+    , dg1 $ (0.25 ~>) $ superimpose (0.125 <~) $ struct "1*2" $ pad7
+  ] # rytm # cps (150/120/2)
+
+p "duds" silence
+
+  hush

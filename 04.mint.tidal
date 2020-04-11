@@ -1,0 +1,28 @@
+let main = every 3 (rev) 
+            $ fast 2 
+            $ every 2 (|+ note "12") 
+            $ (|+ note "-8") 
+            $ (|+ note "-36")
+            $ note "0 4 7 11 12 16 19 23"
+
+d1 
+  $ limit
+  $ stack [
+    main
+    , g $ one' 0.2 $ shift $ roll' 0.1 $ shift $ rep' 10 $ slow 5 $ pad3
+    , g $ (0.5 ~>) $ pad2
+    , perf3 127
+    , g $ fast 2 $ pan "1(3,8)" # midinote "[4,5,6]"
+    , g $ midinote "{8*4 8*2 [9 ~ ~ 9] 8 ~ ~ ~}%4"
+    , g $ shift $ shift $ slow 10 $ midinote 10
+    , fast 16 $ pan "1" # perf5 (range 2 5 $ slow 80 tri)
+    -- , perf1 32
+    , fast 1.6 $ randcat [normDelay]
+  ] # rytm # cps (170/120/2)
+
+d1 $  # rytm
+
+
+d1 $ rytm # midichan 2 # note "c3"
+
+  hush

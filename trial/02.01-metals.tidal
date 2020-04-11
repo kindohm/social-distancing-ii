@@ -1,0 +1,64 @@
+
+-- metals
+let metal = slow "<10 8 6>"
+                    $ stack [
+                      superimpose (fast "<5 6 7>")
+                        $ pan 1 # note (scale "ritusen" (shiftBy 33 $ choose [-16,-15..2])) # legato 1
+                        # octave "<3 4 4 2>"
+                      , filter1 # ccvrand 0 120 101
+                      , penv # ccvrand 0 127 102
+                      , porta # ccvrand 0 64 103
+                      , phwidth # ccvrand 0 20 104
+                      , phoff # ccvrand 0 127 105
+                      , prism # ccvrand 0 127 106
+                      , detune # ccvrand 0 127 107
+                      , timbre # ccvrand 0 127 108
+                      , harmonizer # ccvrand 0 127 109
+                    ] # metalChan # legato 1.25
+    perc1 = (|* gain (range 0.8 1 $ shrand 829822)) 
+              $ (# midichan (shiftBy 77283 $ choose [6,7,6])) 
+              $ struct (binaryN 16 "<283494 14034 124781 234923>") 
+              $ rytm  # note "c3"
+
+
+do
+  let pat = "{0@6 0@6 0@6 1@11 1 0@10 0@12 0 0 0 1@6}%16"
+      mod p = dg0 $ whenmod 20 17 (iter 8) $ every 2 rev $ p 
+  p "metal" 
+    $ limit
+    $ mod
+    $ stack [
+      metal
+      , xfademap [0,0] pat # metalChan
+    ] 
+  p "rytm"
+    $ g
+    $ limit 
+    $ mod
+    $ stack [
+      -- drums
+      g $ dg5 $ every 1 (ghost (# pad11)) 
+        $ dg0 $ rytmmap [2,3] pat # note "c3" # gain (range 0.8 1 $ shrand 3366)
+      -- hat, but also consider ghosting
+      , g $ dg5 $ struct (binaryN 16 "<28394>") $ pad11
+      , g $ dg5 $ perc1
+      -- snare
+      , g $ dg5 $ rollSlow 0.4 $ roll 0.4 $ (0.5 ~>) $ dg2 $ pad2
+      -- synth stab
+      , g $ dg0 $ ((0.0625*3) ~>) $ slow 2 $ (|+ note (shiftBy 99 $ choose [0,12])) 
+        $ (# note "<g3 c3>") $ pad1
+      , fast 1.75 $ perf3flip
+      , perf4flip
+      , slow 1.25 $ scene "<0 1 2>"
+    ] 
+    # rytm # cps (160/120/2)
+
+hush
+
+p "rytm" silence
+
+d1 $  fast 4 $ prism # ccvrand 0 120 101 # metalChan
+
+hush
+
+d1 $ pad3

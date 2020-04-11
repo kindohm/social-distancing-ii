@@ -1,0 +1,47 @@
+
+let atk = ccn 100
+    dec = ccn 101
+    sus = ccn 102
+    rel = ccn 103
+    ccs = slow "<4 3 5 2 6>" $ stack [
+            filter1 # ccv (range 0 127 $ shrand 101)
+          , filter1width # ccv (range 64 127 $ shrand 108)
+          , filter2 # ccv (range 0 127 $ shrand 102)
+          , filter2width # ccv (range 64 127 $ shrand 109)
+          , detune # ccv (range 0 127 $ shrand 103)
+          , atk # ccv (range 20 127 $ shrand 104)
+          , dec # ccv (range 0 127 $ shrand 105)
+          , sus # ccv (range 0 127 $ shrand 106)
+          , rel # ccv (range 0 127 $ shrand 107)
+          , prism # ccv (shiftBy 4 $ choose [0,64,127])
+          , timbre # ccv (shiftBy 55 $ choose [0,127])
+          , penv # ccv (shiftBy 3 $ choose [64,127])
+          , phoff # ccv (range 0 127 $ shrand 200)
+          , phwidth # ccv (range 0 20 $ shrand 201)
+          , phspeed # ccv (range 0 127 $ shrand 202)
+        ] # sqChan
+
+do 
+  let pat = "{0@13 1@3 0@15 0 2@7 0 0 1@8 0 2@2 0 1@6}%16"
+      mod p = every 2 rev $ p
+  d1 
+    $ limit
+    $ shift
+    $ mod
+    $ stack [
+      note (mapp [-4,"-4","8"] pat) # sqChan
+      , xfade (mapp [0,127,0] pat) # sqChan
+      , fast 2 $ ccs      
+      , superimpose ((0.0625 ~>) . (# pad11))
+        $ midichan (mapp ["2",3,1] pat) # rytm # note "c3"
+      , fast 1.5 $ perf3 "<0 0 0 127 0 0>"
+      , fast 2.1 $ perf4flip
+      , dg8 $ struct (ascii "<n o p e>") $ pad1 # note "{c4 c4 d4 c4}%16"
+      , slow 2.25 $ scene "<0 1 2>"
+      , fast 1.5 $ perf8rand
+      , fast 1.75 $ perf6rand
+    ] # cps (160/120/2)
+
+    hush
+
+d1 $ limit $ pad3

@@ -1,0 +1,36 @@
+
+-- for bass, manually tweak LFO depth and filter cutoff point
+-- for synth, adjust balance and filter cutoff
+
+do 
+  let pat = "{0@3 1@3 0@3 1@8 1 0 0 0@10 1 0@2}%16"
+      mod p = every 2 rev $ p
+  p "stuff"
+    $ limit
+    $ stack [
+      -- bass
+      pad1 # legato 1
+      -- chords
+      , g $ (|+ note "-24") $ note (scale "ritusen" "{0 2 1 -1 -2 ~ ~ ~ ~ ~}%1") 
+          # midichan 1 # legato 0.8
+      -- crack
+      , g $ (0.125 ~>) $ midichan "{11/2 ~ ~ ~ ~ ~ ~}%2" # note "c3"
+      -- drums
+      , g $ mod $ dg4 $ rytmmap [2,3] pat # note "c3"
+      --  clap mod
+      , fast 4 $ pan 1 # perf4rand
+      -- cp reverb
+      , fast 4.5 $ pan 1 # perf8rand
+    ] # rytm # cps (150/120/2)
+
+p "stuff" silence
+
+hush
+
+
+let tuna = chop 16 $ loopAt 16 $ gain 1 # s "<tuna>" # lpf 2000 # hpf 100
+    pidgeon = chop 16 $ loopAt 16 $ gain 1 # s "<pidgeon>" # lpf 2000 # hpf 100
+    trip = chop 16 $ loopAt 16 $ gain 1 # s "<trip>" # lpf 2000 # hpf 100
+    tunapidgeontrip = chop 16 $ loopAt 16 $ gain 1 # s "<tuna pidgeon trip>" # lpf 2000 # hpf 100
+
+      hush
